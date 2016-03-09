@@ -18,5 +18,3 @@ def get_position(directions):
         position += 1
 
     return 0
-
-

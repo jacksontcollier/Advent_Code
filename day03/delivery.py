@@ -1,64 +1,40 @@
-def count_houses(directions):
-    x = 0
-    y = 0
-
-    houses = []
+class GenericSanta:
     
-    houses.append((x, y))
+    def __init__(self, x, y):
+        self.location = (x, y) 
+        
+        self.directive_map = {
+            '^' : (0, 1),
+            '>' : (1, 0),
+            'v' : (0, -1),
+            '<' : (-1, 0)
+        }
 
-    for direction in directions:
-        if direction is '^':
-            y += 1
-        elif direction is '>':
-            x += 1
-        elif direction is '<':
-            x -= 1
-        elif direction is 'v':
-            y -= 1
+        self.visited_locations = { self.location : True }
 
-        if (x, y) not in houses:
-            houses.append((x, y))
+    def travel_next_location(self, directive):
+        if directive in self.directive_map:
+            self.location = tuple(map(sum, zip(self.directive_map[directive], self.location)))
+            self.visited_locations[self.location] = True
 
-    return len(houses)
+def count_houses(directions):
+    santa = GenericSanta(0, 0)
+
+    for directive in directions:
+        santa.travel_next_location(directive) 
+
+    return len(santa.visited_locations)
 
 def robo_count(directions):
-    santa_x = 0
-    santa_y = 0
-    robo_x = 0
-    robo_y = 0
+    santa = GenericSanta(0, 0)
+    robo_santa = GenericSanta(0, 0)
 
-    houses = []
-
-    houses.append((santa_x, santa_y))
-    
-    count = 0
-
-    for direction in directions:
-        if (count % 2) is 0:
-            if direction is '^':
-                santa_y += 1
-            elif direction is '>':
-                santa_x += 1
-            elif direction is '<':
-                santa_x -= 1
-            elif direction is 'v':
-                santa_y -= 1
-
-            if (santa_x, santa_y) not in houses:
-                houses.append((santa_x, santa_y))
+    for index, directive in enumerate(directions):
+        if (index % 2) == 0:
+            santa.travel_next_location(directive)
         else:
-            if direction is '^':
-                robo_y += 1
-            elif direction is '>':
-                robo_x += 1
-            elif direction is '<':
-                robo_x -= 1
-            elif direction is 'v':
-                robo_y -= 1
+            robo_santa.travel_next_location(directive)
+    
+    santa.visited_locations.update(robo_santa.visited_locations)
 
-            if (robo_x, robo_y) not in houses:
-                houses.append((robo_x, robo_y))
-        
-        count += 1
-
-    return len(houses)
+    return len(santa.visited_locations)

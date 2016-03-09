@@ -3,6 +3,20 @@ import unittest
 from elevator import count_floors
 from elevator import get_position
 
+def get_directions(input_file):
+    fin = open(input_file)
+
+    directions = ""
+    direction_lines = fin.readlines()
+
+    for line in direction_lines:
+        line.rstrip('\n')
+        directions += line
+
+    fin.close()
+
+    return directions
+
 class TestCountFloors(unittest.TestCase):
     
     def test_one(self):
@@ -33,17 +47,7 @@ class TestCountFloors(unittest.TestCase):
         self.assertEqual(count_floors(')())())'), -3)
 
     def test_ten(self):
-        input_file = open("advent_test_one.txt")
-        
-        directions = ""
-        direction_lines = input_file.readlines()
-        
-        for line in direction_lines:
-            line.rstrip('\n')
-            directions += line
-
-        input_file.close()
-
+        directions = get_directions("advent_test_one.txt") 
         self.assertEqual(count_floors(directions), 74)
 
     def test_eleven(self):
@@ -53,17 +57,7 @@ class TestCountFloors(unittest.TestCase):
         self.assertEqual(get_position('()())'), 5)
 
     def test_thirteen(self):
-        input_file = open("advent_test_two.txt")
-
-        directions = ""
-        direction_lines = input_file.readlines()
-
-        for line in direction_lines:
-            line.rstrip('\n')
-            directions += line
-        
-        input_file.close()
-
+        directions = get_directions("advent_test_two.txt")
         self.assertEqual(get_position(directions), 1795)
 
 if __name__ == '__main__':
