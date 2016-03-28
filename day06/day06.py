@@ -14,9 +14,10 @@ class Grid:
             self.binary = True
         elif mode == "unbounded_above":
             self.unbounded_above = True
-        
+         
         self.input_file = input_file
-        
+        self.total_brightness = 0
+ 
         self.read_instructions(self.input_file)
     
     def read_instructions(self, input_file):
@@ -54,24 +55,22 @@ class Grid:
             for j in range (y1, (y2 + 1), y_increment):
                 if command == self.toggle:
                     if self.binary: 
+                        self.total_brightness += (1 if (self.M[i][j] == 0) else -1) 
                         self.M[i][j] = (self.M[i][j] + 1) % 2
                     elif self.unbounded_above:
+                        self.total_brightness += 2
                         self.M[i][j] = self.M[i][j] + 2
                 elif command == self.on:
                     if self.binary: 
+                        self.total_brightness += (1 if (self.M[i][j] == 0) else 0)
                         self.M[i][j] = 1
                     elif self.unbounded_above:
+                        self.total_brightness += 1
                         self.M[i][j] += 1
                 else:
                     if self.binary:
+                        self.total_brightness += (0 if (self.M[i][j] == 0) else -1)
                         self.M[i][j] = 0
                     elif self.unbounded_above:
+                        self.total_brightness += (0 if (self.M[i][j] <= 0) else -1)
                         self.M[i][j] = (0 if (self.M[i][j] <= 0) else self.M[i][j] - 1)   
-
-    def total_brightness(self):
-        total_brightness = 0
-        for i in range(0, len(self.M)):
-            for j in range(0, len(self.M[i])):
-                total_brightness += self.M[i][j]
-
-        return total_brightness 
