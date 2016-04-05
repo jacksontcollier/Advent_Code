@@ -122,14 +122,3 @@ class Operand:
             return True
         
         return False
-
-circuit = Circuit("day07_input.txt", "")
-circuit.analyze()
-print(c_ushort(circuit.wires['a']))
-result = circuit.wires['a']
-
-circuit_two = Circuit("day07_input.txt", "b")
-circuit_two.wires['b'] = result
-circuit_two.analyze()
-print(c_ushort(circuit_two.wires['a']))
-print("Completion.")
