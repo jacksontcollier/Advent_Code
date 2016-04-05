@@ -4,7 +4,7 @@ from ctypes import *
 import re
 
 class Circuit:
-    def __init__(self, filename):
+    def __init__(self, filename, overwrite):
         self.Operations = ["AND", "OR", "LSHIFT", "RSHIFT",
                         "NOT"]
         self.Commands = []
@@ -20,15 +20,19 @@ class Circuit:
                 if operation == "":
                     operation = "STORE"
                 command = Command(command.replace("\n", ""), operation.replace(" ", ""), self.wires)
-                self.Commands.append(command)
-    
+                if overwrite == "" or (command.store_result_location != overwrite):
+                    self.Commands.append(command)
+
     def analyze(self):
-        while (len(self.Commands)):
-            for command in self.Commands:
-             command.check_state()
-             if command.can_execute:
-                command.execute()
-                self.Commands.remove(command)
+        while len(self.Commands):
+            i = 0
+            while i < len(self.Commands):
+                self.Commands[i].check_state()
+                if self.Commands[i].can_execute:
+                    self.Commands[i].execute()
+                    del self.Commands[i]
+                else:
+                    i += 1
        
     def print_commands(self):
         for command in self.Commands:
@@ -65,23 +69,24 @@ class Command:
     
     def execute(self):
         if self.operation == "STORE":
-            self.wires[self.store_result_location] = c_ushort(operands[0].numeric_val)
+            self.wires[self.store_result_location] = self.operands[0].numeric_val
         elif self.operation == "AND":
-            self.wires[self.store_result_location] = c_ushort(operands[0].numeric_val & operands[1].numeric_val)
+            self.wires[self.store_result_location] = self.operands[0].numeric_val & self.operands[1].numeric_val
         elif self.operation == "OR":
-            self.wires[self.store_result_location] = c_ushort(operands[0].numeric_val | operands[1].numeric_val)
+            self.wires[self.store_result_location] = self.operands[0].numeric_val | self.operands[1].numeric_val
         elif self.operation == "RSHIFT":
-            self.wires[self.store_result_location] = c_ushort(operands[0].numeric_val >> operands[1].numeric_val)
+            self.wires[self.store_result_location] = self.operands[0].numeric_val >> self.operands[1].numeric_val
         elif self.operation == "LSHIFT":
-            self.wires[self.store_result_location] = c_ushort(operands[0].numeric_val << operands[1].numeric_val)
+            self.wires[self.store_result_location] = self.operands[0].numeric_val << self.operands[1].numeric_val
         elif self.operation == "NOT": 
-            self.wires[self.store_result_lovation] = c_ushort(~operands[0].numeric_val)
+            self.wires[self.store_result_location] = ~self.operands[0].numeric_val
 
     def check_state(self):
         for operand in self.operands:
             if not operand.check_numeric_value():
                 return False
         
+        self.can_execute = True
         return True
                 
     def print_state(self):
@@ -95,7 +100,7 @@ class Command:
                      
 class Operand: 
     def __init__(self, operand, wires):
-        self.val = operand
+        self.val = operand.replace(" ", "")
         self.has_numeric_val = False
         self.numeric_val = -1
         self.val_type = ""
@@ -112,11 +117,19 @@ class Operand:
         if self.has_numeric_val:
             return True
         if self.val in self.wires:
-            self.numeric_val = int(self.wires[self.val])
+            self.numeric_val = self.wires[self.val]
+            self.has_numeric_val = True
+            return True
         
         return False
 
-circuit = Circuit("test001.txt")
-circuit.print_commands()
+circuit = Circuit("day07_input.txt", "")
 circuit.analyze()
-print(circuit.wires)
+print(c_ushort(circuit.wires['a']))
+result = circuit.wires['a']
+
+circuit_two = Circuit("day07_input.txt", "b")
+circuit_two.wires['b'] = result
+circuit_two.analyze()
+print(c_ushort(circuit_two.wires['a']))
+print("Completion.")
