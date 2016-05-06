@@ -16,6 +16,7 @@ class Reindeer:
         self.state = Reindeer_State.Resting
         self.relevant_count = 0
         self.distance_traveled = 0
+        self.points = 0
 
     def set_state(self, new_state):
         self.relevant_count = 0
@@ -52,10 +53,34 @@ class Reindeer_Race:
             for deer in self.reindeer:
                 deer.advance_time()
 
+    def run_race_with_points(self, race_length):
+        for deer in self.reindeer:
+            deer.set_state(Reindeer_State.Flying)
+        
+        for i in range(race_length):
+            max_dist = 0
+
+            for deer in self.reindeer:
+                deer.advance_time()
+
+            for deer in self.reindeer:
+                max_dist = max(deer.distance_traveled, max_dist)
+
+            for deer in self.reindeer:
+                if deer.distance_traveled == max_dist:
+                    deer.points += 1
+
     def get_max_dist_traveled(self):
         max_dist = 0
         for deer in self.reindeer:
             max_dist = max(deer.distance_traveled, max_dist)
 
         return max_dist
+
+    def get_max_points(self):
+        max_points = 0
+        for deer in self.reindeer:
+            max_points = max(deer.points, max_points)
+
+        return max_points
 
