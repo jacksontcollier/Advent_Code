@@ -18,10 +18,17 @@ class Recipe:
         self.ingredients = []
         self.amounts = []
         self.best_cookie_score = 0
+        self.restrict_calories = False
+        self.calories_restriction = -1
+
         with open(ingredient_file) as fin:
             for line in fin.readlines():
                 self.ingredients.append(Ingredient(line.rstrip()))
                 self.amounts.append(0)
+    
+    def add_calories_restriction(self, restriction):
+        self.calories_restriction = restriction
+        self.restrict_calories = True
 
     def make_best_cookie_recipe(self):
         self.choose_ingredient_amount(0, 100)
@@ -41,12 +48,14 @@ class Recipe:
         total_durability = 0
         total_flavor = 0
         total_texture = 0
+        total_calories = 0
 
         for i in range(len(self.ingredients)):
             total_capacity += (self.ingredients[i].capacity * self.amounts[i])
             total_durability += (self.ingredients[i].durability * self.amounts[i])
             total_flavor += (self.ingredients[i].flavor * self.amounts[i])
             total_texture += (self.ingredients[i].texture * self.amounts[i])
+            total_calories += (self.ingredients[i].calories * self.amounts[i])
 
         total_capacity = max(0, total_capacity)
         total_durability = max(0, total_durability)
@@ -54,5 +63,7 @@ class Recipe:
         total_texture = max(0, total_texture)
 
         recipe_score = total_capacity * total_durability * total_flavor * total_texture
-
-        self.best_cookie_score = max(self.best_cookie_score, recipe_score)
+        
+        if (self.restrict_calories and (self.calories_restriction == total_calories)) \
+                or not self.restrict_calories:
+            self.best_cookie_score = max(self.best_cookie_score, recipe_score)
