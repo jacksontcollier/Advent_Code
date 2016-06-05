@@ -18,6 +18,10 @@ class CountsMinContainerCombinationsCorrectly(unittest.TestCase):
     def test_one(self):
         container_sizes = read_container_file('test_001.txt')
         self.assertEqual(3, count_min_container_combo(container_sizes, 25))
+    
+    def test_two(self):
+        container_sizes = read_container_file('part_one_input.txt')
+        self.assertEqual(18, count_min_container_combo(container_sizes, 150))
 
 if __name__=='__main__':
     unittest.main()
