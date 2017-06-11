@@ -76,3 +76,31 @@ class MoleculeCalibrator:
             key=lambda sub: len(sub[0]) - len(sub[1]),
             reverse=True)
 
+    def greedy_sub(self, mol, inversed_mol_subs, count):
+        if mol == "e":
+            if self.min_subs_single_electron < 0:
+                self.min_subs_single_electron = count
+            else:
+                self.min_subs_single_electron = min(
+                    self.min_subs_single_electron,
+                    count)
+            self.base_case_hits += 1
+            return
+
+        if self.base_case_hits > self.max_base_case_hits:
+            return
+
+        for sub in inversed_mol_subs:
+            for new_mol in self.single_subs(mol, sub[0], sub[1]):
+                self.greedy_sub(new_mol, inversed_mol_subs, count + 1)
+
+    def get_min_subs_single_electron(self, max_base_case_hits):
+        inversed_mol_subs = self.get_inversed_mol_subs()
+        self.max_base_case_hits = max_base_case_hits
+        self.base_case_hits = 0
+        self.min_subs_single_electron = -1
+
+        self.greedy_sub(self.med_mol, inversed_mol_subs, 0)
+
+        return self.min_subs_single_electron
+
