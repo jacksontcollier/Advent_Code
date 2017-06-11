@@ -41,6 +41,31 @@ class ParsesMoleculeFileCorrectly(unittest.TestCase):
             self.assertEqual(expected_med_mol, med_mol)
             self.assertEqual(expected_mol_subs, mol_subs)
 
+class GeneratesSingleSubstitutionMoleculesCorrectly(unittest.TestCase):
+    def test_one(self):
+        med_mol = "HOH"
+        mol_subs = ["H", "HO"]
+        mol_cal = MoleculeCalibrator(med_mol, mol_subs)
+        subs = mol_cal.single_subs(med_mol, mol_subs[0], mol_subs[1])
+        self.assertEqual("HOOH", subs.__next__())
+
+    def test_two(self):
+        med_mol = "PBAlPRnFArCaCaAlBCaAlTiAlPMg"
+        mol_subs = ["Al", "ThF"]
+        mol_cal = MoleculeCalibrator(med_mol, mol_subs)
+
+        expected = [
+            "PBThFPRnFArCaCaAlBCaAlTiAlPMg",
+            "PBAlPRnFArCaCaThFBCaAlTiAlPMg",
+            "PBAlPRnFArCaCaAlBCaThFTiAlPMg",
+            "PBAlPRnFArCaCaAlBCaAlTiThFPMg"
+        ]
+
+        expected_index = 0
+        for sub in mol_cal.single_subs(med_mol, mol_subs[0], mol_subs[1]):
+            self.assertEqual(expected[expected_index], sub)
+            expected_index += 1
+
 class CalculatesNumberOfUniqueSingleSubstitutions(unittest.TestCase):
     def test_one(self):
         med_mol = "HOH"

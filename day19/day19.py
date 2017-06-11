@@ -45,19 +45,23 @@ class MoleculeCalibrator:
     def make_sub(self, mol, pos, preimage_mol, image_mol):
         return mol[:pos] + mol[pos:].replace(preimage_mol, image_mol, 1)
 
+    def single_subs(self, mol, preimage_mol, image_mol):
+        pos = 0
+
+        while pos < len(mol):
+            pos = mol.find(preimage_mol, pos)
+            if pos < 0:
+                break
+            yield self.make_sub(mol, pos, preimage_mol, image_mol)
+            pos += 1
+
     def num_unique_single_subs(self):
         unique_subs = set()
         mol = self.med_mol
 
         for sub in self.mol_subs:
-            pos = 0
-            while pos < len(self.med_mol):
-                pos = self.med_mol.find(sub[0], pos)
-                if pos < 0:
-                    break
-                new_mol = self.make_sub(self.med_mol, pos, sub[0], sub[1])
+            for new_mol in self.single_subs(self.med_mol, sub[0], sub[1]):
                 unique_subs.add(new_mol)
-                pos += 1
 
         return len(unique_subs)
 
