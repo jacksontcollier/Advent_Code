@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
-from day19 import parse_mol_file
-from day19 import num_unique_subs
+from day19 import MoleculeCalibrator
 
-mol_subs, med_mol = parse_mol_file('day19_input.txt')
-print("Part 1 Answer: %d" % num_unique_subs(mol_subs, med_mol))
+mol_cal = MoleculeCalibrator.init_from_file('day19_input.txt')
+print("Part 1 Answer: %d" % mol_cal.num_unique_single_subs())

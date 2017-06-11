@@ -2,46 +2,62 @@
 
 SUB_SYMBOL = "=>"
 
-def parse_mol_sub(sub):
-    token = sub.split(SUB_SYMBOL)
-    preimage_mol = token[0].strip()
-    image_mol = token[1].strip()
-    return (preimage_mol, image_mol)
+class MoleculeCalibrator:
+    def __init__(self, med_mol, mol_subs):
+        self.med_mol = med_mol
+        self.mol_subs = mol_subs
 
-def parse_mol_file(infile):
-    mol_subs = []
-    med_mol = ""
-    done_reading_subs = False 
-    
-    with open(infile) as fin: 
-        for line in fin.readlines():
-            line = line.strip() 
-            if done_reading_subs:
-                med_mol = line
-                break
+    @staticmethod
+    def parse_mol_sub(sub):
+        token = sub.split(SUB_SYMBOL)
+        preimage_mol = token[0].strip()
+        image_mol = token[1].strip()
+        return (preimage_mol, image_mol)
 
-            if line == "":
-                done_reading_subs = True
-                continue
+    @classmethod
+    def parse_mol_subs_file(cls, mol_subs_file):
+        mol_subs = []
+        med_mol = ""
+        done_reading_subs = False
 
-            preimage_mol, image_mol = parse_mol_sub(line)
+        with open(mol_subs_file) as fin:
+            for line in fin.readlines():
+                line = line.strip()
+                if done_reading_subs:
+                    med_mol = line
+                    break
 
-            mol_subs.append([preimage_mol, image_mol])
-            
-    return (mol_subs, med_mol) 
+                if line == "":
+                    done_reading_subs = True
+                    continue
 
-def num_unique_subs(mol_subs, mol):
-    unique_subs = set()
+                preimage_mol, image_mol = cls.parse_mol_sub(line)
 
-    for sub in mol_subs:
-        pos = 0
-        while pos < len(mol):
-            pos = mol.find(sub[0], pos)
-            if pos < 0:
-                break
-            new_mol = mol[:pos] + mol[pos:].replace(sub[0], sub[1], 1)
-            unique_subs.add(new_mol)
-            pos += 1
+                mol_subs.append([preimage_mol, image_mol])
 
-    return len(unique_subs)
+        return (med_mol, mol_subs)
+
+    @classmethod
+    def init_from_file(cls, mol_subs_file):
+        med_mol, mol_subs = cls.parse_mol_subs_file(mol_subs_file)
+        return cls(med_mol, mol_subs)
+
+    def make_sub(self, mol, pos, preimage_mol, image_mol):
+        return mol[:pos] + mol[pos:].replace(preimage_mol, image_mol, 1)
+
+    def num_unique_single_subs(self):
+        unique_subs = set()
+        mol = self.med_mol
+
+        for sub in self.mol_subs:
+            pos = 0
+            while pos < len(self.med_mol):
+                pos = self.med_mol.find(sub[0], pos)
+                if pos < 0:
+                    break
+                new_mol = self.make_sub(self.med_mol, pos, sub[0], sub[1])
+                unique_subs.add(new_mol)
+                pos += 1
+
+        return len(unique_subs)
 
