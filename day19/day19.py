@@ -65,3 +65,14 @@ class MoleculeCalibrator:
 
         return len(unique_subs)
 
+    def get_inversed_mol_subs(self):
+        inversed_mol_subs = []
+
+        for sub in self.mol_subs:
+            inversed_mol_subs.append([sub[1], sub[0]])
+
+        return sorted(
+            inversed_mol_subs,
+            key=lambda sub: len(sub[0]) - len(sub[1]),
+            reverse=True)
+
