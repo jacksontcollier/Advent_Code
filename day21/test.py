@@ -2,7 +2,7 @@
 
 import unittest
 from weapon import weapons
-from weapon import combination
+from combinations import combination
 
 class GeneratesCombinationsCorrectly(unittest.TestCase):
     def test_one(self):
