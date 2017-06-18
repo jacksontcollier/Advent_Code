@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 
 class Battle:
-    def __init__(self, attacker, defender)
+    def __init__(self, attacker, defender):
         self.attacker = attacker
         self.defender = defender
         self.winner = None
 
+    def execute_turn(self, attacker, defender):
+        damage = max(1, attacker.get_attack() - defender.get_armor())
+        self.defender.damage(damage)
+
+        if defender.is_dead():
+            self.winner = attacker
+
     def start(self):
         while True:
-            damage = max(1, attacker.get_attack() - defender.get_armor())
-            self.defender.damage(damage)
-
-            if self.defender.is_dead():
-                self.winner = self.attacker
+            self.execute_turn(self.attacker, self.defender)
+            if self.winner != None:
                 return
-
-            damage = max(1, defender.get_attack() - attacker.get_armor())
-            self.attacker.damage(damage)
-
-            if self.attacker.is_dead():
-                self.winner = self.defender
+            self.execute_turn(self.defender, self.attacker)
+            if self.winner != None:
                 return
 
     def get_winner(self):

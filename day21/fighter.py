@@ -3,7 +3,7 @@
 class Fighter:
     def __init__(self, name, hit_points):
         self.name = name
-        self.hit_points
+        self.hit_points = hit_points
         self.armor = 0
         self.attack = 0
 
