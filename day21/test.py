@@ -1,48 +1,95 @@
 #!/usr/bin/env python3
 
 import unittest
-from weapon import weapon_options
 from combinations import combination
+from item import Item
 from fighter import Fighter
 from battle import Battle
+from minimal_expense import item_selection
+
+test_items = [
+    Item("Option #1", 1, 2, 3),
+    Item("Option #2", 3, 5, 0),
+    Item("Option #3", 3, 0, 1),
+    Item("Option #4", 2, 4, 1),
+    Item("Option #5", 5, 2, 0)
+]
 
 class GeneratesCombinationsCorrectly(unittest.TestCase):
     def test_one(self):
         expected = []
-        combinations = combination(weapon_options, 0, 0)
+        combinations = combination(test_items, 0, 0)
         self.assertEqual(expected, combinations.__next__())
 
     def test_two(self):
-        for index, combo in enumerate(combination(weapon_options, 1, 0)):
-            expected = [weapon_options[index]]
+        for index, combo in enumerate(combination(test_items, 1, 0)):
+            expected = [test_items[index]]
             self.assertEqual(expected, combo)
 
     def test_three(self):
-        combos = combination(weapon_options, 2, 0)
+        combos = combination(test_items, 2, 0)
 
-        expected = [weapon_options[0], weapon_options[1]]
+        expected = [test_items[0], test_items[1]]
         self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[0], weapon_options[2]]
+        expected = [test_items[0], test_items[2]]
         self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[0], weapon_options[3]]
+        expected = [test_items[0], test_items[3]]
         self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[0], weapon_options[4]]
-        self.assertEqual(expected, combos.__next__())
-
-        expected = [weapon_options[1], weapon_options[2]]
-        self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[1], weapon_options[3]]
-        self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[1], weapon_options[4]]
+        expected = [test_items[0], test_items[4]]
         self.assertEqual(expected, combos.__next__())
 
-        expected = [weapon_options[2], weapon_options[3]]
+        expected = [test_items[1], test_items[2]]
         self.assertEqual(expected, combos.__next__())
-        expected = [weapon_options[2], weapon_options[4]]
+        expected = [test_items[1], test_items[3]]
+        self.assertEqual(expected, combos.__next__())
+        expected = [test_items[1], test_items[4]]
         self.assertEqual(expected, combos.__next__())
 
-        expected = [weapon_options[3], weapon_options[4]]
+        expected = [test_items[2], test_items[3]]
         self.assertEqual(expected, combos.__next__())
+        expected = [test_items[2], test_items[4]]
+        self.assertEqual(expected, combos.__next__())
+
+        expected = [test_items[3], test_items[4]]
+        self.assertEqual(expected, combos.__next__())
+
+class CalculateItemSelectionCorrectly(unittest.TestCase):
+    def test_one(self):
+        selection = item_selection(test_items, 0, 2)
+        expected = []
+        self.assertEqual(expected, selection.__next__())
+
+        expected = [test_items[0]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[1]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[2]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[3]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[4]]
+        self.assertEqual(expected, selection.__next__())
+
+        expected = [test_items[0], test_items[1]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[0], test_items[2]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[0], test_items[3]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[0], test_items[4]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[1], test_items[2]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[1], test_items[3]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[1], test_items[4]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[2], test_items[3]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[2], test_items[4]]
+        self.assertEqual(expected, selection.__next__())
+        expected = [test_items[3], test_items[4]]
+        self.assertEqual(expected, selection.__next__())
 
 class CalculateBattleWinnerCorrectly(unittest.TestCase):
     def test_one(self):

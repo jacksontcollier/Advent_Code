@@ -16,7 +16,7 @@ MAX_RINGS = 2
 
 def item_selection(item_collection, min_items_allowed, max_items_allowed):
     for num_items in range(min_items_allowed, max_items_allowed + 1):
-        for item_combo in combination(item_collection, num_items, 0)
+        for item_combo in combination(item_collection, num_items, 0):
             yield item_combo
 
 def cal_equipment_cost(equipment):

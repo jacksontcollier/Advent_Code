@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from item import Item
+
 ring_options = [
     Item("Damage +1", 25, 1, 0),
     Item("Damage +2", 50, 2, 0),
