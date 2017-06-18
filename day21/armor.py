@@ -2,7 +2,7 @@
 
 from item import Item
 
-armor = [
+armor_options = [
     Item("Leather", 13, 0, 1),
     Item("Chainmail", 31, 0, 2),
     Item("Splintmail", 53, 0, 3),

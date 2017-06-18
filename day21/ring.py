@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-ring = [
+ring_options = [
     Item("Damage +1", 25, 1, 0),
     Item("Damage +2", 50, 2, 0),
     Item("Damage +3", 100, 3, 0),

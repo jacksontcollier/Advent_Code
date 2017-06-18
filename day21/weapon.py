@@ -2,7 +2,7 @@
 
 from item import Item
 
-weapons = [
+weapon_options = [
     Item("Dagger", 8, 4, 0),
     Item("Shortsword", 10, 5, 0),
     Item("Warhammer", 25, 6, 0),

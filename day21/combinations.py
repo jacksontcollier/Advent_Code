@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 def combination(collection, num_combinations, index):
     if num_combinations == 0:
         yield []
