@@ -8,7 +8,7 @@ class Battle:
 
     def execute_turn(self, attacker, defender):
         damage = max(1, attacker.get_attack() - defender.get_armor())
-        self.defender.damage(damage)
+        defender.damage(damage)
 
         if defender.is_dead():
             self.winner = attacker

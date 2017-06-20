@@ -33,8 +33,8 @@ class Fighter:
 
     def equip_items(self, items):
         for item in items:
-            self.attack += item.attack
-            self.armor += item.armor
+            self.attack += item.get_damage()
+            self.armor += item.get_armor()
 
     def is_dead(self):
         return self.hit_points <= 0
