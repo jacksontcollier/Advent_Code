@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from armor import armor_options
-from ring import ring_options
-from weapon import weapon_options
+from item import armor_options
+from item import ring_options
+from item import weapon_options
 from combinations import combination
 from fighter import Fighter
 from battle import Battle
