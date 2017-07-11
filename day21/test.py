@@ -6,6 +6,7 @@ from item import Item
 from fighter import Fighter
 from battle import Battle
 from minimal_expense import item_selection
+from minimal_expense import get_minimal_expense
 
 test_items = [
     Item("Option #1", 1, 2, 3),
@@ -105,6 +106,12 @@ class CalculateBattleWinnerCorrectly(unittest.TestCase):
         battle.start()
         expected = hero
         actual = battle.get_winner()
+        self.assertEqual(expected, actual)
+
+class CalculatesPartOneAnswerCorrectly(unittest.TestCase):
+    def test_one(self):
+        expected = 91
+        actual = get_minimal_expense(100, 2, 8)
         self.assertEqual(expected, actual)
 
 if __name__ == "__main__":
