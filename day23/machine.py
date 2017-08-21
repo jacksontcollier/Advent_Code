@@ -11,13 +11,13 @@ def read_instructions_from_file(filename):
     return instructions
 
 class Machine:
-    def __init__(self):
-        self.registers = { "a": 0, "b": 0 }
-        self.pc = 0     # Program Counter
+    def __init__(self, register_a=0, register_b=0, pc=0):
+        self.registers = { "a": register_a, "b": register_b }
+        self.pc = pc     # Program Counter
         self.executed_jmp_instruction = False
         self.isa_map = {
             "hlf": self.execute_hlf_instruction,
-            "tpl": self.execute_hlf_instruction,
+            "tpl": self.execute_tpl_instruction,
             "inc": self.execute_inc_instruction,
             "jmp": self.execute_jmp_instruction,
             "jie": self.execute_jie_instruction,
@@ -37,7 +37,7 @@ class Machine:
         self.isa_map[name](*instruction_tokens[1:])
 
     def execute_hlf_instruction(self, register):
-        result = math.floor(self.register_map[register] / 2)
+        result = math.floor(self.registers[register] / 2)
         self.registers[register] = result
 
     def execute_tpl_instruction(self, register):
@@ -57,12 +57,11 @@ class Machine:
             self.executed_jmp_instruction = True
 
     def execute_jio_instruction(self, register, offset):
-        if self.registers[register] % 2 == 1:
+        if self.registers[register] == 1:
             self.pc += int(offset)
             self.executed_jmp_instruction = True
 
     def execute_program(self, program_instructions):
-        self.clear_registers()
         self.pc = 0
 
         while self.pc < len(program_instructions) and self.pc >= 0:
